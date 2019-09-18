@@ -15,7 +15,10 @@ def combine(by_company_dir):
 		full_filename = os.path.join(by_company_dir, filename)
 		print('combining {filename} {cnt}th'.format(filename=filename, cnt=cnt))
 		# change_close misses sign, thus drop
-		df = pd.read_csv(full_filename, index_col=0).drop(['change_close'], axis=1)
+		df = pd.read_csv(full_filename).drop(['change_close'], axis=1)
+		df = df.rename(columns={'company_name': 'symbol'}) # to conform with us data
+		df['date'] = pd.to_datetime(df['date'], format="%Y.%m.%d")
+		df = df.set_index('date')
 		df_combined = df_combined.append(df)
 		cnt += 1
 
