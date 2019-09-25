@@ -16,5 +16,5 @@ def _get_tz_utcoffset_hours(cfg):
     return td.seconds // 3600
 
 def get_start(cfg):
-    t = datetime.datetime.strptime(cfg['market']['start'], '%H:%M:%S')
+    t = datetime.datetime.strptime(cfg['schedule']['start'], '%H:%M:%S')
     return datetime.time(t.hour, t.minute, t.second, tzinfo=get_tz(cfg))
