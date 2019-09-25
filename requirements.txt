@@ -2,3 +2,4 @@ pandas
 html5lib
 PyYAML
 pytz
+google-cloud-storage
