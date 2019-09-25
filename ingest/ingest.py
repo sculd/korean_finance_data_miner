@@ -7,6 +7,7 @@ import company_codes
 _URL_NAVER_FINANCE_FORMAT = 'http://finance.naver.com/item/sise_day.nhn?code={code}'
 STORE_DIR = 'data_by_company'
 _codes = company_codes.get_codes()
+_PAGES_TO_INGEST = 1
 
 def get_naver_finance_url(company_name): 
 	if company_name not in _codes:
@@ -22,13 +23,13 @@ def ingest(company_name, company_code, date_str, cnt):
 	url = get_naver_finance_url(company_name)
 
 	df = pd.DataFrame()
-	for page in range(1, 21):
+	for page in range(1, _PAGES_TO_INGEST + 1):
 		pg_url = '{url}&page={page}'.format(url=url, page=page)
 		df = df.append(pd.read_html(pg_url, header=0)[0], ignore_index=True)
 
 	df = df.dropna()
 	df = df.rename(columns={'날짜': 'date', '전일비': 'change_close', '종가': 'close', '시가': 'open', '고가': 'high', '저가': 'low', '거래량': 'volume'})
-	df['company_name'] = company_name
+	df['symbol'] = company_name
 	df = df.set_index('date')
 	df.to_csv('{store_dir}/{company_code}_{date_str}.csv'.format(store_dir=STORE_DIR, company_code=company_code, date_str=date_str))
 	print('ingest {company_name} {cnt}th is done'.format(company_name=company_name, cnt=cnt))
