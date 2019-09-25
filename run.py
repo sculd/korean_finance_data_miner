@@ -1,4 +1,5 @@
 import datetime, time
+import util.time
 import config
 import ingest.ingest
 from ingest import combine_ingest
@@ -13,7 +14,7 @@ if __name__ == '__main__':
 	run_dates = set()
 	while True:
 		tz = config.get_tz(cfg)
-		dt_str = str(datetime.datetime.utcnow().astimezone(tz).date())
+		dt_str = str(util.time.get_utcnow().astimezone(tz).date())
 		print('checking if run for {dt_str} should be done'.format(dt_str=dt_str))
 		if dt_str in run_dates:
 			print('run for {dt_str} is already done'.format(dt_str=dt_str))
