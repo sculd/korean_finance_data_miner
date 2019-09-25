@@ -22,7 +22,7 @@ if __name__ == '__main__':
 			continue
 		t_run_after = config.get_start(cfg)
 		while True:
-			t_cur = datetime.datetime.now().astimezone(tz).time()
+			t_cur = util.time.get_utcnow().astimezone(tz).time()
 			print('checking if the schedule time for {dt_str} has reached'.format(dt_str=dt_str))
 			if t_cur > t_run_after:
 				run_dates.add(str(dt_str))
