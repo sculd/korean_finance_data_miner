@@ -3,7 +3,9 @@ import util.time
 import config
 import ingest.ingest
 from ingest import combine_ingest
-import logging
+import logging, sys
+
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 def run():
 	ingest.ingest.run()
