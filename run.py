@@ -16,7 +16,7 @@ import logging, sys
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 def run_ingests(pages_to_ingest):
-    ingest.ingest.run()
+    ingest.ingest.run(pages_to_ingest=pages_to_ingest)
     ingest.append.combine_most_recent_and_temp()
     combine_ingest.run()
 
