@@ -42,7 +42,11 @@ def ingest(company_name, company_code, dest_dir, cnt):
     return df
 
 def run():
+    if not os.path.exists(BASE_DIR):
+        os.mkdir(BASE_DIR)
+
     date_str = util.time.get_today_str_tz()
+    print('{date_str} starting ingest'.format(date_str=date_str))
     cnt = 0
     futures = []
     executor = ThreadPoolExecutor(max_workers=200)
