@@ -89,6 +89,10 @@ def combine_most_recent_and_temp():
     dir_1 = util.path.get_latest_filename(ingest.ingest.BASE_DIR, skips=set([ingest.ingest.TEMP_DIR_NEW_INGEST, 'temp.py']))
     dir_2 = os.path.join(ingest.ingest.BASE_DIR, ingest.ingest.TEMP_DIR_NEW_INGEST)
     dest_dir = os.path.join(ingest.ingest.BASE_DIR, date_str)
+
+    if dir_1 == ingest.ingest.BASE_DIR:
+        shutil.copy(dir_2, dest_dir)
+
     if dir_1 == dest_dir:
         print('[combine_most_recent_and_temp] dir_1 and dest_dir are identical: {dir}, skipping'.format(dir=dest_dir))
         return
