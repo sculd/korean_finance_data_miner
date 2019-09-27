@@ -52,6 +52,7 @@ def run(pages_to_ingest):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-p", "--pages", type=int, default=1, help="pages to ingest")
+    parser.add_argument("-f", "--forcerun", action="store_true", help="forces run without waiting without observing the schedule.")
     args = parser.parse_args()
 
     run(args.pages)
