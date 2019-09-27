@@ -42,6 +42,8 @@ def combine_two_by_companies(by_company_dir_1, by_company_dir_2, dest_dir):
     Combine csv files in two dir per filename and save each combined into dest_dir
     '''
 
+    print('Combining two dirs {by_company_dir_1} and {by_company_dir_2} into {dest_dir}'.format(
+		by_company_dir_1=by_company_dir_1, by_company_dir_2=by_company_dir_2, dest_dir=dest_dir))
     if not os.path.exists(dest_dir):
         os.mkdir(dest_dir)
 
