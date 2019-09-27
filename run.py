@@ -23,14 +23,14 @@ def run_ingests(pages_to_ingest):
 def run_upload():
     upload.upload.upload()
 
-def run(pages_to_ingest):
+def run(pages_to_ingest, force_run):
     cfg = config.load('config.kr.yaml')
     tz = config.get_tz(cfg)
 
     while True:
         dt_str = str(util.time.get_utcnow().astimezone(tz).date())
         logging.info('checking if run for {dt_str} should be done'.format(dt_str=dt_str))
-        if upload.history.did_upload_today():
+        if not force_run and upload.history.did_upload_today():
             logging.info('run for {dt_str} is already done'.format(dt_str=dt_str))
             time.sleep(10 * 60)
             continue
@@ -39,7 +39,7 @@ def run(pages_to_ingest):
         while True:
             t_cur = util.time.get_utcnow().astimezone(tz).time()
             logging.info('checking if the schedule time for {dt_str} has reached'.format(dt_str=dt_str))
-            if t_cur > t_run_after:
+            if not force_run and t_cur > t_run_after:
                 run_ingests(pages_to_ingest)
                 run_upload()
                 upload.history.on_upload()
@@ -55,4 +55,4 @@ if __name__ == '__main__':
     parser.add_argument("-f", "--forcerun", action="store_true", help="forces run without waiting without observing the schedule.")
     args = parser.parse_args()
 
-    run(args.pages)
+    run(args.pages, args.force_run)
