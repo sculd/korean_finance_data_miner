@@ -1,3 +1,5 @@
+import argparse
+
 import os
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(os.getcwd(), 'credential.json')
 
@@ -13,7 +15,7 @@ import logging, sys
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-def run_ingests():
+def run_ingests(pages_to_ingest):
     ingest.ingest.run()
     ingest.append.combine_most_recent_and_temp()
     combine_ingest.run()
@@ -21,7 +23,7 @@ def run_ingests():
 def run_upload():
     upload.upload.upload()
 
-def run():
+def run(pages_to_ingest):
     cfg = config.load('config.kr.yaml')
     tz = config.get_tz(cfg)
 
@@ -38,7 +40,7 @@ def run():
             t_cur = util.time.get_utcnow().astimezone(tz).time()
             logging.info('checking if the schedule time for {dt_str} has reached'.format(dt_str=dt_str))
             if t_cur > t_run_after:
-                run_ingests()
+                run_ingests(pages_to_ingest)
                 run_upload()
                 upload.history.on_upload()
                 break
@@ -48,4 +50,8 @@ def run():
 
 
 if __name__ == '__main__':
-    run()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-p", "--pages", type=int, default=1, help="pages to ingest")
+    args = parser.parse_args()
+
+    run(args.pages)

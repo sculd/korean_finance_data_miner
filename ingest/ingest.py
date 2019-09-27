@@ -1,4 +1,3 @@
-import datetime, threading
 # env var OBJC_DISABLE_INITIALIZE_FORK_SAFETY should be "YES" for ProcessPoolExecutor
 import os
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
@@ -19,7 +18,7 @@ def get_naver_finance_url(company_name):
     url = _URL_NAVER_FINANCE_FORMAT.format(code=code)
     return url
 
-def ingest(company_name, company_code, dest_dir, cnt):
+def ingest(company_name, company_code, dest_dir, pages_to_ingest, cnt):
     '''
     Ingest the first 21 pages from the naver finance and save it as csv
     '''
@@ -29,7 +28,7 @@ def ingest(company_name, company_code, dest_dir, cnt):
     url = get_naver_finance_url(company_name)
 
     df = pd.DataFrame()
-    for page in range(1, _PAGES_TO_INGEST + 1):
+    for page in range(1, pages_to_ingest + 1):
         pg_url = '{url}&page={page}'.format(url=url, page=page)
         df = df.append(pd.read_html(pg_url, header=0)[0], ignore_index=True)
 
@@ -41,7 +40,7 @@ def ingest(company_name, company_code, dest_dir, cnt):
     print('ingest {company_name} {cnt}th is done'.format(company_name=company_name, cnt=cnt))
     return df
 
-def run():
+def run(pages_to_ingest=_PAGES_TO_INGEST):
     if not os.path.exists(BASE_DIR):
         os.mkdir(BASE_DIR)
 
@@ -54,8 +53,7 @@ def run():
         if cnt > 3000:
             break
 
-
-        futures.append(executor.submit(ingest, company_name, _codes[company_name], os.path.join(BASE_DIR, TEMP_DIR_NEW_INGEST), cnt))
+        futures.append(executor.submit(ingest, company_name, _codes[company_name], os.path.join(BASE_DIR, TEMP_DIR_NEW_INGEST), pages_to_ingest, cnt))
         print('{company_name}, {cnt}th queued'.format(company_name=company_name, cnt=cnt))
         cnt += 1
 
