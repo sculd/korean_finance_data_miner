@@ -5,6 +5,7 @@ import datetime, time
 import util.time
 import config
 import ingest.ingest
+import ingest.append
 import upload.upload
 import upload.history
 from ingest import combine_ingest
@@ -14,6 +15,7 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 def run_ingests():
 	ingest.ingest.run()
+	ingest.append.combine_most_recent_and_temp()
 	combine_ingest.run()
 
 def run_upload():
@@ -35,8 +37,7 @@ def run():
 		while True:
 			t_cur = util.time.get_utcnow().astimezone(tz).time()
 			logging.info('checking if the schedule time for {dt_str} has reached'.format(dt_str=dt_str))
-			if True:
-			#if t_cur > t_run_after:
+			if t_cur > t_run_after:
 				run_ingests()
 				run_upload()
 				upload.history.on_upload()

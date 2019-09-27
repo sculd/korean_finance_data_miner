@@ -1,12 +1,5 @@
-import datetime, time
-import util.time
-import config
-import ingest.ingest
-import upload.upload
-from ingest import combine_ingest
+import ingest.append
 
-def run_upload():
-    upload.upload.upload()
 
-if __name__ == '__main__':
-    run_upload()
+ingest.append.combine_two_by_companies('data_by_company/2019-09-24', 'data_by_company/2019-09-26', 'data_by_company/2019-09-30')
+
