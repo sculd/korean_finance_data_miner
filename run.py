@@ -48,6 +48,10 @@ def run(pages_to_ingest, forcerun):
             logging.info('schedule time {t_run_after} not yet reached at {t_cur}'.format(t_run_after=t_run_after, t_cur=t_cur))
             time.sleep(60)
 
+        if forcerun:
+            # forcerun runs only once
+            break
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
