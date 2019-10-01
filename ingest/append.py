@@ -99,4 +99,5 @@ def combine_most_recent_and_temp():
     if dir_1 == dest_dir:
         print('[combine_most_recent_and_temp] dir_1 and dest_dir are identical: {dir}, skipping'.format(dir=dest_dir))
         return
+
     combine_two_by_companies(dir_1, dir_2, dest_dir)

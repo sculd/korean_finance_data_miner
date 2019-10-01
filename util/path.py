@@ -1,5 +1,7 @@
 import os
 
+_skips_default = set(['.DS_Store'])
+
 def get_latest_filename(path, skips=None):
     '''
     give the dir/filename lexically largest
@@ -9,6 +11,8 @@ def get_latest_filename(path, skips=None):
     latest = ''
     for filename in os.listdir(path):
         if skips is not None and filename in skips:
+            continue
+        if filename in _skips_default:
             continue
         if filename > latest:
             latest = filename
