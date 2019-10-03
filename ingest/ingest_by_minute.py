@@ -76,7 +76,7 @@ def run_first_five_minutes():
         if cnt > 3000:
             break
 
-        futures.append(executor.submit(ingest, company_name, os.path.join(BASE_DIR, TEMP_DIR_NEW_INGEST), 1, cnt))
+        futures.append(executor.submit(ingest_first_five_minutes, company_name, os.path.join(BASE_DIR, TEMP_DIR_NEW_INGEST), 1, cnt))
         print('{company_name}, {cnt}th queued'.format(company_name=company_name, cnt=cnt))
         cnt += 1
 
