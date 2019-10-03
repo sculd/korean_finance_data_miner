@@ -63,6 +63,15 @@ def ingest_first_five_minutes(company_name, dest_dir, pages_to_ingest, cnt):
     time_str = now_tz.strftime('%Y%m%d%H%M%S')
     return ingest(company_name, time_str, dest_dir, pages_to_ingest, cnt)
 
+def ingest_entire_day(company_name, dest_dir, day_str, cnt):
+    '''
+    See docstring of ingest function.
+
+    :param day_str: e.g. 20191225
+    '''
+    time_str = '{day_str}160000'.format(day_str=day_str)
+    return ingest(company_name, time_str, dest_dir, 50, cnt)
+
 def run_first_five_minutes():
     if not os.path.exists(BASE_DIR):
         os.mkdir(BASE_DIR)
