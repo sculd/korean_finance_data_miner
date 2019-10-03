@@ -5,26 +5,33 @@ import pandas as pd
 import company_codes
 import util.time
 
-_URL_NAVER_FINANCE_FORMAT = 'http://finance.naver.com/item/sise_day.nhn?code={code}'
-BASE_DIR = 'data_by_company'
+_URL_NAVER_FINANCE_FORMAT = 'http://finance.naver.com/item/sise_time.nhn?code={code}&thistime={time_str}'
+# 'https://finance.naver.com/item/sise_time.nhn?code=260660&thistime=20191002161054&page=1'
+BASE_DIR = 'data_by_minute_by_company'
 TEMP_DIR_NEW_INGEST = 'temp'
 _codes = company_codes.get_codes()
 _PAGES_TO_INGEST = 1
 
-def get_naver_finance_url(company_name): 
+def get_naver_finance_url(company_name, time_str):
+    '''
+
+    :param company_name: as in the mapping
+    :param time_str: e.g. 20191002161054=> 2019:10:02T14:10:54 KR
+    :return: e.g. https://finance.naver.com/item/sise_time.nhn?code=260660&thistime=20191002161054
+    '''
     if company_name not in _codes:
         return ''
     code = _codes[company_name]
-    url = _URL_NAVER_FINANCE_FORMAT.format(code=code)
+    url = _URL_NAVER_FINANCE_FORMAT.format(code=code, time_str=time_str)
     return url
 
-def ingest(company_name, dest_dir, pages_to_ingest, cnt):
+def ingest(company_name, time_str, dest_dir, pages_to_ingest, cnt):
     '''
     Ingest the first pages_to_ingest pages from the naver finance and save it as csv
 
     Save under data_by_company/ dir
     :param company_name:
-    :param company_code:
+    :param time_str: e.g. 20191002161054=> 2019:10:02T14:10:54 KR
     :param dest_dir:
     :param pages_to_ingest:
     :param cnt:
@@ -33,7 +40,7 @@ def ingest(company_name, dest_dir, pages_to_ingest, cnt):
     if not os.path.exists(dest_dir):
         os.mkdir(dest_dir)
 
-    url = get_naver_finance_url(company_name)
+    url = get_naver_finance_url(company_name, time_str)
 
     df = pd.DataFrame()
     for page in range(1, pages_to_ingest + 1):
@@ -48,7 +55,15 @@ def ingest(company_name, dest_dir, pages_to_ingest, cnt):
     print('ingest {company_name} {cnt}th is done'.format(company_name=company_name, cnt=cnt))
     return df
 
-def run(pages_to_ingest=_PAGES_TO_INGEST):
+def ingest_first_five_minutes(company_name, dest_dir, pages_to_ingest, cnt):
+    '''
+    See docstring of ingest function.
+    '''
+    now_tz = util.time.get_now_tz()
+    time_str = now_tz.strftime('%Y%m%d%H%M%S')
+    return ingest(company_name, time_str, dest_dir, pages_to_ingest, cnt)
+
+def run_first_five_minutes():
     if not os.path.exists(BASE_DIR):
         os.mkdir(BASE_DIR)
 
@@ -61,7 +76,7 @@ def run(pages_to_ingest=_PAGES_TO_INGEST):
         if cnt > 3000:
             break
 
-        futures.append(executor.submit(ingest, company_name, os.path.join(BASE_DIR, TEMP_DIR_NEW_INGEST), pages_to_ingest, cnt))
+        futures.append(executor.submit(ingest, company_name, os.path.join(BASE_DIR, TEMP_DIR_NEW_INGEST), 1, cnt))
         print('{company_name}, {cnt}th queued'.format(company_name=company_name, cnt=cnt))
         cnt += 1
 
@@ -69,7 +84,7 @@ def run(pages_to_ingest=_PAGES_TO_INGEST):
     print('All done')
 
 if __name__ == '__main__':
-    run()
+    run_first_five_minutes()
 
 
 

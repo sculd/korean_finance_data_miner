@@ -1,5 +1,5 @@
-import ingest.append
+import ingest.ingest_by_minute
 
 
-ingest.append.combine_two_by_companies('data_by_company/2019-09-24', 'data_by_company/2019-09-26', 'data_by_company/2019-09-30')
+ingest.ingest_by_minute.run_first_five_minutes()
 

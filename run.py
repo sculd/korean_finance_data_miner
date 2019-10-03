@@ -8,17 +8,17 @@ import util.time
 import config
 import ingest.ingest
 import ingest.append
+import ingest.combine_ingest
 import upload.upload
 import upload.history
-from ingest import combine_ingest
 import logging, sys
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-def run_ingests(pages_to_ingest):
+def run_ingests_append_combine(pages_to_ingest):
     ingest.ingest.run(pages_to_ingest=pages_to_ingest)
     ingest.append.combine_most_recent_and_temp()
-    combine_ingest.run()
+    ingest.combine_ingest.run()
 
 def run_upload():
     upload.upload.upload()
@@ -40,7 +40,7 @@ def run(pages_to_ingest, forcerun):
             t_cur = util.time.get_utcnow().astimezone(tz).time()
             logging.info('checking if the schedule time for {dt_str} has reached'.format(dt_str=dt_str))
             if forcerun or t_cur > t_run_after:
-                run_ingests(pages_to_ingest)
+                run_ingests_append_combine(pages_to_ingest)
                 run_upload()
                 upload.history.on_upload()
                 break
