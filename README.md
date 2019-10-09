@@ -28,3 +28,6 @@ python run.py
 ```bash
 python run.py --pages=2
 ```
+
+# env vars
+* GOOGLE_APPLICATION_CREDENTIALS
