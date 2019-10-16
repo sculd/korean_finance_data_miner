@@ -45,7 +45,7 @@ def run(pages_to_ingest, forcerun):
                 break
 
             logging.info('schedule time {t_run_after} not yet reached at {t_cur}'.format(t_run_after=t_run_after, t_cur=t_cur))
-            time.sleep(60)
+            time.sleep(10 * 60)
 
         if forcerun:
             # forcerun runs only once
