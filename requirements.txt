@@ -3,4 +3,5 @@ html5lib
 PyYAML
 pytz
 google-cloud-storage
+google-cloud-logging
 lxml

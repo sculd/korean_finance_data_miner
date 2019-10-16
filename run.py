@@ -3,7 +3,7 @@ import argparse
 import os
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(os.getcwd(), 'credential.json')
 
-import datetime, time
+import time
 import util.time
 import config
 import ingest.ingest
@@ -11,9 +11,8 @@ import ingest.append
 import ingest.combine_ingest
 import upload.upload
 import upload.history
-import logging, sys
+import util.logging as logging
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 def run_ingests_append_combine(pages_to_ingest):
     ingest.ingest.run(pages_to_ingest=pages_to_ingest)
